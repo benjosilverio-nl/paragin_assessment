@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class="container-fluid">
+    <main class="px-4 py-5">
+        <h1>Test Results Assessment</h1>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <form class="row g-3" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="results" class="form-label">Select Results File</label>
+                <input class="form-control" type="file" id="results" name="results">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-3">Submit Results</button>
+            </div>
+        </form>
+        <div class="accordion" id="resultAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Students
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#resultAccordion">
+                    <div class="accordion-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Student ID</th>
+                                    <th scope="col">Total Score</th>
+                                    <th scope="col">Max Score</th>
+                                    <th scope="col">%</th>
+                                    <th scope="col">Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <th scope="row" class="text-white {{ student['performance']['passed'] ? 'bg-success' : 'bg-danger' }}">{{ student['student_id'] }}</th>
+                                    <td class="text-white {{ student['performance']['passed'] ? 'bg-success' : 'bg-danger' }}">{{ student['performance']['total'] }}</td>
+                                    <td class="text-white {{ student['performance']['passed'] ? 'bg-success' : 'bg-danger' }}">{{ student['performance']['max'] }}</td>
+                                    <td class="text-white {{ student['performance']['passed'] ? 'bg-success' : 'bg-danger' }}">{{ student['performance']['percentage'] * 100 }}</td>
+                                    <td class="text-white {{ student['performance']['passed'] ? 'bg-success' : 'bg-danger' }}">{{ student['performance']['grade'] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Questions
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#resultAccordion">
+                    <div class="accordion-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Question Title</th>
+                                    <th scope="col">Max Score</th>
+                                    <th scope="col">pValue</th>
+                                    <th scope="col">Correlation Coefficient</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for question in questions %}
+                                <tr>
+                                    <th class="{{ question['rit'] < 0 ? 'bg-danger text-white' : (question['rit'] >  0 ?  'bg-success text-white' : '') }}" scope="row">{{ question['title'] }}</th>
+                                    <td class="{{ question['rit'] < 0 ? 'bg-danger text-white' : (question['rit'] >  0 ?  'bg-success text-white' : '') }}">{{ question['max_score'] }}</td>
+                                    <td class="{{ question['rit'] < 0 ? 'bg-danger text-white' : (question['rit'] >  0 ?  'bg-success text-white' : '') }}">{{ question['pValue'] }}</td>
+                                    <td class="{{ question['rit'] < 0 ? 'bg-danger text-white' : (question['rit'] >  0 ?  'bg-success text-white' : '') }}">{{ question['rit'] }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

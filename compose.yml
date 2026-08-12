@@ -1,0 +1,54 @@
+services:
+  paragin_php:
+    build:
+      context: .
+      dockerfile: ./docker/php-fpm/Dockerfile
+    container_name: paragin_php
+    entrypoint: ["/usr/local/bin/entrypoint.sh"]
+    volumes:
+      - ./src:/var/www/html
+      - paragin_app_vendor:/var/www/html/vendor
+    networks:
+      - paragin_central_network
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm -t >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    depends_on:
+      paragin_composer:
+        condition: service_healthy
+
+  paragin_nginx:
+    image: nginx:1.27-alpine
+    container_name: paragin_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/nginx/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      paragin_php:
+        condition: service_healthy
+    networks:
+      - paragin_central_network
+  paragin_composer:
+    image: composer:2
+    working_dir: /app
+    volumes:
+      - ./src:/app
+      - paragin_app_vendor:/app/vendor
+    command: sh -c "composer install --no-scripts --no-interaction --prefer-dist && sleep infinity"
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/vendor/autoload.php"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+  
+networks:
+  paragin_central_network:
+    driver: bridge
+volumes:
+  paragin_app_vendor:
+  

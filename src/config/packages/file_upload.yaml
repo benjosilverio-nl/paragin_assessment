@@ -1,0 +1,12 @@
+parameters:
+  file_upload.supported_types:
+    csv:
+      mime: 'text/csv'
+      validator: App\Validator\CsvValidator
+      max_size: 2000000
+
+    xlsx:
+      mime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      validator: App\Validator\XlsxValidator
+      max_size: 5000000
+  

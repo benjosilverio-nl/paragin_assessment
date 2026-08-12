@@ -1,0 +1,28 @@
+{
+    "students": [
+        {
+            "student_id": "S1",
+            "scores": [
+                {
+                    "question_id": 1,
+                    "score": 4
+                },
+                {
+                    "question_id": 2,
+                    "score": 3
+                }
+            ],
+            "performance": []
+        },
+        {
+            "student_id": "S2",
+            "scores": [
+                {
+                    "question_id": 1,
+                    "score": 5
+                }
+            ],
+            "performance": []
+        }
+    ]
+}
